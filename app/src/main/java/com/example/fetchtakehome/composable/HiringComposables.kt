@@ -3,6 +3,7 @@ package com.example.fetchtakehome.composable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -86,7 +88,10 @@ fun HiringScreen(viewModel: HiringViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun HiringList(hiringResponse: Map<Int, List<HiringResponseItem>>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
-        hiringResponse.forEach { (_, value) ->
+        hiringResponse.forEach { (key, value) ->
+            stickyHeader {
+                ListHeader(key)
+            }
             items(value, key = { it.id }) {
                 HiringCell(it)
                 HorizontalDivider()
@@ -96,10 +101,20 @@ fun HiringList(hiringResponse: Map<Int, List<HiringResponseItem>>, modifier: Mod
 }
 
 @Composable
+fun ListHeader(key: Int, modifier: Modifier = Modifier) {
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant, modifier = modifier.fillMaxWidth()) {
+        Text(
+            stringResource(R.string.list_header, key),
+            Modifier.padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
 fun HiringCell(hiringResponseItem: HiringResponseItem) {
     ListItem(
-        headlineContent = { hiringResponseItem.name?.let { Text(it) } },
-        trailingContent = { Text(stringResource(R.string.list_header, hiringResponseItem.listId)) }
+        headlineContent = { hiringResponseItem.name?.let { Text(it) } }, //domain layer ensures non-null name, but to be safe...
+        trailingContent = { Text(stringResource(R.string.item_id, hiringResponseItem.id)) }
     )
 }
 
