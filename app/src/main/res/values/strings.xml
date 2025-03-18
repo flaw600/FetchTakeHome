@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FetchTakeHome</string>
+    <string name="error_message">We are having trouble fetching the hiring list. Please try again later</string>
+    <string name="list_header">List ID: %s</string>
+    <string name="empty_message">There are currently no candidates! Please refresh later for updates.</string>
+    <string name="hiring_activity_name">Fetch Recruitment</string>
+</resources>
