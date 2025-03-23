@@ -1,6 +1,6 @@
 package com.example.fetchtakehome.viewmodel
 
-import com.example.fetchtakehome.model.HiringResponseItem
+import com.example.fetchtakehome.model.HiringCandidate
 import kotlinx.coroutines.flow.StateFlow
 
 interface HiringViewModel {
@@ -11,5 +11,5 @@ interface HiringViewModel {
 sealed interface HiringState {
     data object Loading : HiringState
     open class Message(val messageResId: Int) : HiringState
-    data class Success(val hiringListGroup: Map<Int, List<HiringResponseItem>>) : HiringState
+    data class Success(val hiringListGroup: Map<Int, List<HiringCandidate>>) : HiringState
 }

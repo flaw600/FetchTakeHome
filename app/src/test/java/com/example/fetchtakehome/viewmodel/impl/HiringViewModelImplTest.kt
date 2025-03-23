@@ -2,7 +2,7 @@ package com.example.fetchtakehome.viewmodel.impl
 
 import android.util.Log
 import com.example.fetchtakehome.R
-import com.example.fetchtakehome.model.HiringResponseItem
+import com.example.fetchtakehome.model.HiringCandidate
 import com.example.fetchtakehome.usecase.GetHiringInfoByListIdUseCase
 import com.example.fetchtakehome.viewmodel.HiringState
 import com.example.fetchtakehome.viewmodel.HiringViewModel
@@ -48,7 +48,7 @@ class HiringViewModelImplTest {
         every { Log.e(any(), any(), any()) } returns 0
         coEvery { mockGetHiringInfoByListIdUseCase.invoke() } coAnswers {
             delay(30L)
-            mapOf(1 to listOf(HiringResponseItem(id = 1, name = "Item 1", listId = 1)))
+            mapOf(1 to listOf(HiringCandidate(id = 1, name = "Item 1", listId = 1)))
         }
         Dispatchers.setMain(testDispatcher)
         viewModel = HiringViewModelImpl(mockGetHiringInfoByListIdUseCase)
@@ -68,7 +68,7 @@ class HiringViewModelImplTest {
     @Test
     fun `Successful refresh updates state`() = runTest {
         val expectedData =
-            mapOf(1 to listOf(HiringResponseItem(id = 1, name = "Item 1", listId = 1)))
+            mapOf(1 to listOf(HiringCandidate(id = 1, name = "Item 1", listId = 1)))
         coEvery { mockGetHiringInfoByListIdUseCase.invoke() } returns expectedData
 
         viewModel.refresh()

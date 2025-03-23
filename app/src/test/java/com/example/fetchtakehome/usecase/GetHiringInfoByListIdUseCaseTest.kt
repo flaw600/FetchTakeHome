@@ -1,5 +1,6 @@
 package com.example.fetchtakehome.usecase
 
+import com.example.fetchtakehome.model.HiringCandidate
 import com.example.fetchtakehome.model.HiringResponseItem
 import com.example.fetchtakehome.repository.HiringRepository
 import io.mockk.MockKAnnotations
@@ -29,13 +30,15 @@ class GetHiringInfoByListIdUseCaseTest {
         useCase = GetHiringInfoByListIdUseCase(repository)
     }
 
+    private fun HiringResponseItem.toHiringCandidate() = HiringCandidate(id, listId, name!!)
+
     @Test
     fun `Successful retrieval and processing of hiring list`() = runTest {
         val result = useCase.invoke()
 
         assertEquals(2, result.size)
-        assertEquals(listOf(hiringList[0], hiringList[1]), result[1])
-        assertEquals(listOf(hiringList[2], hiringList[3]), result[2])
+        assertEquals(listOf(hiringList[0].toHiringCandidate(), hiringList[1].toHiringCandidate()), result[1])
+        assertEquals(listOf(hiringList[2].toHiringCandidate(), hiringList[3].toHiringCandidate()), result[2])
     }
 
     @Test
@@ -50,8 +53,8 @@ class GetHiringInfoByListIdUseCaseTest {
         val result = useCase.invoke()
 
         assertEquals(2, result.size)
-        assertEquals(listOf(hiringList[0]), result[1])
-        assertEquals(listOf(hiringList[3]), result[2])
+        assertEquals(listOf(hiringList[0].toHiringCandidate()), result[1])
+        assertEquals(listOf(hiringList[3].toHiringCandidate()), result[2])
     }
 
     @Test
@@ -68,8 +71,22 @@ class GetHiringInfoByListIdUseCaseTest {
         val result = useCase.invoke()
 
         assertEquals(2, result.size)
-        assertEquals(listOf(hiringList[1], hiringList[2], hiringList[0]), result[1])
-        assertEquals(listOf(hiringList[4], hiringList[5], hiringList[3]), result[2])
+        assertEquals(
+            listOf(
+                hiringList[1].toHiringCandidate(),
+                hiringList[2].toHiringCandidate(),
+                hiringList[0].toHiringCandidate()
+            ),
+            result[1]
+        )
+        assertEquals(
+            listOf(
+                hiringList[4].toHiringCandidate(),
+                hiringList[5].toHiringCandidate(),
+                hiringList[3].toHiringCandidate()
+            ),
+            result[2]
+        )
     }
 
     @Test

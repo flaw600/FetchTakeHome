@@ -40,6 +40,20 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        @Suppress("UnstableApiUsage")
+        managedDevices {
+            localDevices {
+                create("pixel2api30") {
+                    device = "Pixel 2"
+                    // ATDs currently support only API level 30.
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                    emulatorSnapshots.enableForTestFailures = true
+                }
+            }
+        }
+    }
 }
 
 kapt {

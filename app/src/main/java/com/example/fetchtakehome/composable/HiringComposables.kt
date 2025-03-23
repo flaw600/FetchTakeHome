@@ -26,13 +26,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fetchtakehome.R
-import com.example.fetchtakehome.model.HiringResponseItem
+import com.example.fetchtakehome.model.HiringCandidate
 import com.example.fetchtakehome.ui.theme.FetchTakeHomeTheme
 import com.example.fetchtakehome.viewmodel.HiringState
 import com.example.fetchtakehome.viewmodel.HiringViewModel
@@ -63,7 +64,6 @@ fun HiringScaffold(viewModel: HiringViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HiringScreen(viewModel: HiringViewModel, modifier: Modifier = Modifier) {
     val state = viewModel.hiringListState.collectAsState(HiringState.Loading)
@@ -86,14 +86,14 @@ fun HiringScreen(viewModel: HiringViewModel, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HiringList(hiringResponse: Map<Int, List<HiringResponseItem>>, modifier: Modifier = Modifier) {
+fun HiringList(hiringResponse: Map<Int, List<HiringCandidate>>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
         hiringResponse.forEach { (key, value) ->
             stickyHeader {
                 ListHeader(key)
             }
             items(value, key = { it.id }) {
-                HiringCell(it)
+                HiringCell(it.name, it.id)
                 HorizontalDivider()
             }
         }
@@ -102,19 +102,20 @@ fun HiringList(hiringResponse: Map<Int, List<HiringResponseItem>>, modifier: Mod
 
 @Composable
 fun ListHeader(key: Int, modifier: Modifier = Modifier) {
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant, modifier = modifier.fillMaxWidth()) {
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant, modifier = modifier.testTag("ListHeaderSurface").fillMaxWidth()) {
         Text(
             stringResource(R.string.list_header, key),
-            Modifier.padding(horizontal = 8.dp)
+            Modifier.padding(horizontal = 8.dp).testTag("ListHeaderText")
         )
     }
 }
 
 @Composable
-fun HiringCell(hiringResponseItem: HiringResponseItem) {
+fun HiringCell(headline: String, id: Int, modifier: Modifier = Modifier) {
     ListItem(
-        headlineContent = { hiringResponseItem.name?.let { Text(it) } }, //domain layer ensures non-null name, but to be safe...
-        trailingContent = { Text(stringResource(R.string.item_id, hiringResponseItem.id)) }
+        modifier = modifier,
+        headlineContent = { Text(headline) },
+        trailingContent = { Text(stringResource(R.string.item_id, id)) }
     )
 }
 
@@ -124,8 +125,8 @@ private fun HiringListPreview() {
     FetchTakeHomeTheme {
         HiringList(
             mapOf(
-                1 to listOf(HiringResponseItem(id = 0, name = "Jassi Sikand"), HiringResponseItem(id = 1, name = "GS")),
-                2 to listOf(HiringResponseItem(id = 2, name = "Jassi Sikand"), HiringResponseItem(id = 3, name = "GS"))
+                1 to listOf(HiringCandidate(id = 0, name = "Jassi Sikand"), HiringCandidate(id = 1, name = "GS")),
+                2 to listOf(HiringCandidate(id = 2, name = "Jassi Sikand"), HiringCandidate(id = 3, name = "GS"))
             )
         )
     }
