@@ -5,4 +5,5 @@
     <string name="empty_message">There are currently no candidates! Please refresh later for updates.</string>
     <string name="hiring_activity_name">Fetch Recruitment</string>
     <string name="item_id">Item ID: %s</string>
+    <string name="refresh_button_content_description">Refresh</string>
 </resources>

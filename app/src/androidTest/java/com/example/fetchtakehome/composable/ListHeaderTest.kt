@@ -1,4 +1,4 @@
-package com.example.fetchtakehome
+package com.example.fetchtakehome.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
@@ -10,10 +10,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.dp
-import com.example.fetchtakehome.composable.ListHeader
 import org.junit.Rule
 import org.junit.Test
-
 
 class ListHeaderTest {
     @get:Rule
@@ -42,7 +40,8 @@ class ListHeaderTest {
         }
         composeTestRule.onNodeWithTag("ListHeaderSurface").assertIsDisplayed().assert(
             SemanticsMatcher("has fillMaxWidth modifier") { semanticsNode ->
-                semanticsNode.layoutInfo.getModifierInfo().find { it.modifier == Modifier.fillMaxWidth() } != null
+                semanticsNode.layoutInfo.getModifierInfo()
+                    .find { it.modifier == Modifier.fillMaxWidth() } != null
             }
         )
     }

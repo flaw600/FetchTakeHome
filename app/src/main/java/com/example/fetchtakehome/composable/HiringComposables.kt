@@ -56,7 +56,7 @@ fun HiringScaffold(viewModel: HiringViewModel) {
         val state by viewModel.hiringListState.collectAsStateWithLifecycle(HiringState.Loading)
         if (state !is HiringState.Loading) {
             FloatingActionButton(onClick = { viewModel.refresh() }) {
-                Icon(Icons.Filled.Refresh, "Refresh")
+                Icon(Icons.Filled.Refresh, stringResource(R.string.refresh_button_content_description))
             }
         }
     }) { innerPadding ->
@@ -102,10 +102,14 @@ fun HiringList(hiringResponse: Map<Int, List<HiringCandidate>>, modifier: Modifi
 
 @Composable
 fun ListHeader(key: Int, modifier: Modifier = Modifier) {
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant, modifier = modifier.testTag("ListHeaderSurface").fillMaxWidth()) {
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant, modifier = modifier
+        .testTag("ListHeaderSurface")
+        .fillMaxWidth()) {
         Text(
             stringResource(R.string.list_header, key),
-            Modifier.padding(horizontal = 8.dp).testTag("ListHeaderText")
+            Modifier
+                .padding(horizontal = 8.dp)
+                .testTag("ListHeaderText")
         )
     }
 }

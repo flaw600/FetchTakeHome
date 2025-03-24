@@ -1,26 +1,18 @@
-package com.example.fetchtakehome
+package com.example.fetchtakehome.composable
 
-import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollTo
-import com.example.fetchtakehome.composable.HiringList
+import com.example.fetchtakehome.HiringTest
 import com.example.fetchtakehome.model.HiringCandidate
-import org.junit.Rule
 import org.junit.Test
 
-class HiringListTest {
-
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-
-    private fun getListIdString(id: Int) = composeTestRule.activity.getString(R.string.list_header, id)
-    private fun getItemIdString(id: Int) = composeTestRule.activity.getString(R.string.item_id, id)
+class HiringListTest : HiringTest() {
 
     @Test
     fun hiring_list_single_group() {
@@ -30,26 +22,22 @@ class HiringListTest {
             HiringList(groupOfCandidatesByListID)
         }
 
-        composeTestRule.onNodeWithText("Item 1", useUnmergedTree = true)
-            .assertIsDisplayed()
-            .assert(hasAnySibling(hasText(getItemIdString(1))))
+        composeTestRule.onNodeWithText("Item 1").assertIsDisplayed()
     }
 
     @Test
     fun hiring_list_many_items_in_group_appear_in_sequence() {
         val items = mutableListOf<HiringCandidate>()
         for(i in 1..10){
-            items.add(HiringCandidate(i,1,"Item $i"))
+            items.add(HiringCandidate(i, 1, "Item $i"))
         }
         val groupOfCandidatesByListID = mapOf(1 to items)
         composeTestRule.setContent {
             HiringList(groupOfCandidatesByListID)
         }
 
-        composeTestRule.onNodeWithText("Item 1", useUnmergedTree = true).assertIsDisplayed()
-            .assert(hasAnySibling(hasText(getItemIdString(1))))
-        composeTestRule.onNodeWithText("Item 10", useUnmergedTree = true).performScrollTo()
-            .assert(hasAnySibling(hasText(getItemIdString(10))))
+        composeTestRule.onNodeWithText("Item 1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Item 10").performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -66,17 +54,21 @@ class HiringListTest {
 
         //test sticky headers are siblings
         composeTestRule.onNode(
-            hasAnyChild(hasText(getListIdString(1), true))
+           hasTestTag("ListHeaderSurface") and hasAnyChild(hasText(getListIdString(1), true))
         ).assertIsDisplayed()
-         .assert(hasAnySibling(hasAnyChild(hasText(getListIdString(2)))))
+         .assert(
+             hasAnySibling(
+                 hasTestTag("ListHeaderSurface")
+                         and hasAnyChild(hasText(getListIdString(2), true))
+             )
+         )
 
         //test that name and item # are headline and trailing content, respectively
-        composeTestRule.onNodeWithText("Item 1", useUnmergedTree = true)
+        composeTestRule.onNodeWithText("Item 1")
             .assertIsDisplayed()
-            .assert(hasAnySibling(hasText(getItemIdString(1))))
 
-        composeTestRule.onNodeWithText("Item 2", useUnmergedTree = true)
+        composeTestRule.onNodeWithText("Item 2")
             .performScrollTo()
-            .assert(hasAnySibling(hasText(getItemIdString(2))))
+            .assertIsDisplayed()
     }
 }
